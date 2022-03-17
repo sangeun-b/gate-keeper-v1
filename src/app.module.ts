@@ -12,18 +12,20 @@ import { Member } from './member/entity/member.entity';
 import { CamModule } from './cam/cam.module';
 import { Cam } from './cam/entity/cam.entity';
 import { Imgs2 } from './Imgs2/entity/imgs2.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'rootsystem7',
-      database: 'test',
+      host: process.env.DB_HOST,
+      port: +process.env.DB_PORT,
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       entities: [Acct, Visitor, Member, Cam, Imgs2],
-      synchronize: true, //entity만들고 자동 save. 개발모드에서만 사용
+      // synchronize: true, //entity만들고 자동 save. 개발모드에서만 사용
       timezone: 'Z',
     }),
     AuthModule,
