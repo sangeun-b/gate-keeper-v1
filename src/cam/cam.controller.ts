@@ -22,7 +22,7 @@ export class CamController {
     return this.camService.findAll();
   }
 
-  @Delete('id')
+  @Delete(':id')
   remove(@Param('id') id: number) {
     this.camService.remove(id);
     return `cam #${id} deleted!`;
