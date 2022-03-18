@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { CamService } from './cam.service';
 import { Cam } from './entity/cam.entity';
 
@@ -20,6 +20,12 @@ export class CamController {
   @Get()
   findAll() {
     return this.camService.findAll();
+  }
+
+  @Delete('id')
+  remove(@Param('id') id: number) {
+    this.camService.remove(id);
+    return `cam #${id} deleted!`;
   }
 
   // @Get('addr')
