@@ -21,4 +21,9 @@ export class CamController {
   findAll() {
     return this.camService.findAll();
   }
+
+  // @Get('addr')
+  // findByAddr(@Body() addr: Cam) {
+  //   return this.camService.findByAddr(addr);
+  // }
 }

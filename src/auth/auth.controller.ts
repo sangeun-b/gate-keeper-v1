@@ -25,9 +25,15 @@ export class AuthController {
   @Post('/register')
   async registerAccount(@Req() req: Request, @Body() acct: Acct): Promise<any> {
     const cam = new Cam();
-    cam.addr = acct.addr;
+    const addr2 = acct.addr.split('동');
+    const addr3 = addr2[0] + '동';
+    console.log(`===${addr2}`);
+    console.log(`!!!${addr3}`);
+    cam.addr = addr3;
+    console.log(`@@@${addr3}`);
     const findCam = await this.camService.findByAddr(cam);
     acct.cam = findCam;
+    console.log(findCam);
 
     return await this.authService.registerAcct(acct);
   }
