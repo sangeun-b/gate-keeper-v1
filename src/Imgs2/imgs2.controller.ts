@@ -99,6 +99,8 @@ export class ImgsController {
     @Param('mid') mid: number,
   ) {
     const mem = await this.memberService.findOne(mid);
+    console.log(process.env.FIRBASE_PRIVATE_KEY);
+    console.log(process.env.FIRBASE_PRIVATE_KEY.replace(/\\n/g, '\n'));
     console.log(mem);
     console.log(file);
     const mimg = new Imgs2();
