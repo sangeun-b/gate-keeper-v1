@@ -13,11 +13,19 @@ import { CamModule } from './cam/cam.module';
 import { Cam } from './cam/entity/cam.entity';
 import { Imgs2 } from './Imgs2/entity/imgs2.entity';
 import { ConfigModule } from '@nestjs/config';
+import { FirebaseModule } from 'nestjs-firebase';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    FirebaseModule.forRoot({
+      googleApplicationCredential: {
+        projectId: process.env.NEXT_PUBLIC_FIRBASE_PROJECT_ID,
+        privateKey: process.env.FIRBASE_PRIVATE_KEY,
+        clientEmail: process.env.FIRBASE_CLIENT_EMAIL,
+      },
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',

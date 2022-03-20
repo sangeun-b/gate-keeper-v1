@@ -10,7 +10,6 @@ import {
   getConnection,
   getRepository,
 } from 'typeorm';
-import { MemberDTO } from './dto/member.dto';
 import { Member } from './entity/member.entity';
 import { MemberRepository } from './member.repository';
 
@@ -38,7 +37,7 @@ export class MemberService {
     const memberFind: Member = await this.findByFields({
       where: { name: newMember.name, acct: newMember.acct },
     });
-    //console.log(memberFind);
+    console.log(memberFind);
     if (memberFind) {
       return undefined;
     }

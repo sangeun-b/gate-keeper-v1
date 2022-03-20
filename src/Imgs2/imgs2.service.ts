@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { unlinkSync } from 'fs';
+import { FirebaseAdmin, InjectFirebaseAdmin } from 'nestjs-firebase';
 import { Member } from 'src/member/entity/member.entity';
 import { MemberService } from 'src/member/member.service';
 import { getConnection } from 'typeorm';
