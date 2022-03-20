@@ -36,9 +36,12 @@ export class ImgsController {
     const mlist = await this.imgsService.findAll(mid);
     console.log(mlist);
     for (let i = 0; i < mlist.length; i++) {
+      // mlist[
+      //   i
+      // ].url = `http://localhost:3000/member/img/${findMem.acctId}/${mlist[i].url}`;
       mlist[
         i
-      ].url = `http://localhost:3000/member/img/${findMem.acctId}/${mlist[i].url}`;
+      ].url = `https://gate-keeper-v1.herokuapp.com/member/img/${findMem.acctId}/${mlist[i].url}`;
       console.log(mlist[i]);
     }
     return mlist;
