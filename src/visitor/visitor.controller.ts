@@ -5,19 +5,22 @@ import {
   Param,
   Post,
   Put,
+  Response,
+  StreamableFile,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { mkdirSync } from 'fs';
 import { diskStorage } from 'multer';
+import { FirebaseAdmin, InjectFirebaseAdmin } from 'nestjs-firebase';
 import { extname } from 'path';
 import { CamService } from 'src/cam/cam.service';
 import { ImgsService } from 'src/Imgs2/imgs2.service';
 import { MyNewFileInterceptor } from 'src/member/fileInterceptor';
 import { MemberService } from 'src/member/member.service';
-import { VisitorDTO } from './dto/visitor.dto';
 import { Visitor } from './entity/visitor.entity';
 import { VisitorService } from './visitor.service';
+import { v4 as uuid } from 'uuid';
 
 @Controller('cam')
 export class VisitorController {
@@ -26,6 +29,7 @@ export class VisitorController {
     private camService: CamService,
     private imgService: ImgsService,
     private memService: MemberService,
+    @InjectFirebaseAdmin() private readonly firebase: FirebaseAdmin,
   ) {}
 
   // @Post(':id/visitor')
@@ -81,6 +85,19 @@ export class VisitorController {
     @Body() visitor: Visitor,
   ): Promise<Visitor | undefined> {
     console.log(visitor);
+
+    const bucket = this.firebase.storage.bucket(
+      process.env.NEXT_PUBLIC_FIRBASE_STORAGE_BUCKET,
+    );
+    console.log(file.path);
+    const uploadedLink = await bucket.upload(file.path, {
+      public: true,
+      destination: `visitors/${id}/${file.filename}`,
+      metadata: {
+        firebaseStorageDownloadTokens: uuid(),
+      },
+    });
+    console.log(uploadedLink);
     const cam = await this.camService.findOne(id);
     visitor.cam = cam;
     if (visitor.img == 'Unknown') {
@@ -108,5 +125,26 @@ export class VisitorController {
   @Get(':id/visitors')
   async findAll(@Param('id') id: number): Promise<Visitor[] | undefined> {
     return await this.visitorService.findAllVisitor(id);
+  }
+
+  @Get(':id/visitor/:name')
+  async getFile(
+    @Param('name') name: string,
+    @Param('id') id: number,
+    @Response({ passthrough: true }) res,
+  ): Promise<StreamableFile> {
+    // process.chdir(
+    //   `D:\\AI_web_developer\\ai_mentoring\\Nodejs\\final-proj2\\uploads\\${id}`,
+    // );
+    const bucket = this.firebase.storage.bucket(
+      process.env.NEXT_PUBLIC_FIRBASE_STORAGE_BUCKET,
+    );
+    const file = bucket.file(`visitors/${id}/${name}`).createReadStream();
+    // const file = createReadStream(join(process.cwd(), name)); //firebase endpoint로 접근, readstream내용이 firbase 내용으로 or firbase에서 readstream
+    res.set({
+      'Content-Type': 'image/jpeg',
+      'Content-Disposition': 'filename=' + name,
+    });
+    return new StreamableFile(file);
   }
 }

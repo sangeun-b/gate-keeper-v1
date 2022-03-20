@@ -16,7 +16,7 @@ import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { Member } from './entity/member.entity';
 import { MemberService } from './member.service';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 import { extname } from 'path';
 import { identity, Observable, of } from 'rxjs';
 import { AcctService } from 'src/acct/acct.service';
@@ -28,6 +28,7 @@ import { Request } from 'express';
 import { fsync, mkdirSync, unlinkSync } from 'fs';
 import { imgsDTO } from 'src/Imgs2/dto/imgs.dto';
 import { unlink } from 'fs/promises';
+import { FirebaseAdmin, InjectFirebaseAdmin } from 'nestjs-firebase';
 
 @Controller('acct')
 export class MemberController {
@@ -35,6 +36,7 @@ export class MemberController {
     private memberService: MemberService,
     private acctService: AcctService,
     private imgsService: ImgsService,
+    @InjectFirebaseAdmin() private readonly firebase: FirebaseAdmin,
   ) {
     //console.log(memberService, acctService, imgsService);
   }
@@ -108,6 +110,17 @@ export class MemberController {
     member.acct = acct;
     // member.img = file.filename;
     const mimg = new Imgs2();
+    const bucket = this.firebase.storage.bucket(
+      process.env.NEXT_PUBLIC_FIRBASE_STORAGE_BUCKET,
+    );
+    console.log(file.path);
+    const uploadedLink = await bucket.upload(file.path, {
+      public: true,
+      destination: `uploads/${id}/${file.filename}`,
+      metadata: {
+        firebaseStorageDownloadTokens: uuid(),
+      },
+    });
     mimg.url = file.filename;
     console.log(member);
     const memberFind = await this.memberService.save(member);
