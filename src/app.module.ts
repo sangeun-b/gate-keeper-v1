@@ -23,7 +23,7 @@ import { FirebaseModule } from 'nestjs-firebase';
     FirebaseModule.forRoot({
       googleApplicationCredential: {
         projectId: process.env.NEXT_PUBLIC_FIRBASE_PROJECT_ID,
-        privateKey: process.env.FIRBASE_PRIVATE_KEY,
+        privateKey: process.env.FIRBASE_PRIVATE_KEY.replace('/\\n/g', '\n'),
         clientEmail: process.env.FIRBASE_CLIENT_EMAIL,
       },
     }),
