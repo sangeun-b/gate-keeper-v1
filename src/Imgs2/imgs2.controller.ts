@@ -21,8 +21,10 @@ import { fileURLToPath } from 'url';
 import { Imgs2 } from './entity/imgs2.entity';
 import { ImgsService } from './imgs2.service';
 import { v4 as uuid } from 'uuid';
+import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('member')
+@ApiTags('Imgs API')
 export class ImgsController {
   constructor(
     private imgsService: ImgsService,
@@ -31,6 +33,14 @@ export class ImgsController {
   ) {}
 
   @Get(':mid/imgs')
+  @ApiOperation({
+    summary: '모든 Img 정보 조회',
+    description: 'Member id 이용하여 그 Member가 가지고 있는 모든 img 조회',
+  })
+  @ApiCreatedResponse({
+    description: '조회된 Member가 가지고 있는 모든 img',
+    type: Imgs2,
+  })
   async findAll(@Param('mid') mid: number): Promise<Imgs2[]> {
     const findMem = await this.memberService.findOne(mid);
     const mlist = await this.imgsService.findAll(mid);
@@ -47,10 +57,19 @@ export class ImgsController {
     return mlist;
   }
 
-  @Get('img/:id/:name')
+  @Get('img/:aid/:name')
+  @ApiOperation({
+    summary: 'Img 불러오기',
+    description:
+      'Acct id 이용하여 Img가 저장된 Acct 폴더를 찾고, Img name으로 img 찾아서 불러옴',
+  })
+  @ApiCreatedResponse({
+    description: 'Acct id와 img name으로 path를 만들어서 image 파일을 불러옴',
+    type: StreamableFile,
+  })
   async getFile(
     @Param('name') name: string,
-    @Param('id') id: number,
+    @Param('aid') id: number,
     @Response({ passthrough: true }) res,
   ): Promise<StreamableFile> {
     // process.chdir(
@@ -67,7 +86,18 @@ export class ImgsController {
     });
     return new StreamableFile(file);
   }
+
   @Post(':aid/:mid/img')
+  @ApiOperation({
+    summary: 'Img 저장',
+    description:
+      'Acct id로 Img가 저장될 폴더를 만들고, member id를 이용해서 img에 member id를 지정해서 img 저장',
+  })
+  @ApiCreatedResponse({
+    description:
+      'Acct id로 만들어진 폴더에 Img를 저장하고 member id를 fk로 저장',
+    type: Imgs2,
+  })
   @UseInterceptors(
     MyNewFileInterceptor('file', (ctx) => {
       // const req = ctx.switchToHttp().getRequest() as Request;
@@ -123,6 +153,10 @@ export class ImgsController {
   }
 
   @Delete(':aid/img/:id')
+  @ApiOperation({
+    summary: 'Img 삭제',
+    description: 'Acct id로 Img가 저장될 폴더를 찾아서, Img id로 Img 삭제',
+  })
   async remove(@Param('id') id: number, @Param('aid') aid: number) {
     const imgFind = await this.imgsService.findOne(id);
     console.log(imgFind);

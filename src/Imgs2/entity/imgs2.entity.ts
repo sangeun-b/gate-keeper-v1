@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Member } from 'src/member/entity/member.entity';
 import {
   Column,

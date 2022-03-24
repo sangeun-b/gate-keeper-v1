@@ -29,8 +29,10 @@ import { fsync, mkdirSync, unlinkSync } from 'fs';
 import { imgsDTO } from 'src/Imgs2/dto/imgs.dto';
 import { unlink } from 'fs/promises';
 import { FirebaseAdmin, InjectFirebaseAdmin } from 'nestjs-firebase';
+import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('acct')
+@ApiTags('Member API')
 export class MemberController {
   constructor(
     private memberService: MemberService,
@@ -71,7 +73,9 @@ export class MemberController {
   //   return this.memberService.save(member, id);
   // }
 
-  @Post(':id/member') //member를 먼저 만들고 사진 추가?
+  @Post(':id/member')
+  @ApiOperation({ summary: 'member 등록', description: '새 member 등록' })
+  @ApiCreatedResponse({ description: '새 member 등록', type: Member })
   @UseInterceptors(
     MyNewFileInterceptor('file', (ctx) => {
       // const req = ctx.switchToHttp().getRequest() as Request;
@@ -146,17 +150,41 @@ export class MemberController {
     // return await this.imgsService.save(file);
   }
 
-  @Get(':id/members')
-  findAll(@Param('id') id: number): Promise<Member[]> {
+  @Get(':aid/members')
+  @ApiOperation({
+    summary: 'member 검색',
+    description: 'acct id(pk)로 member 정보 조회',
+  })
+  @ApiCreatedResponse({
+    description: 'acct id(pk)로 member 정보 조회',
+    type: Member,
+  })
+  findAll(@Param('aid') id: number): Promise<Member[]> {
     return this.memberService.findAllByAcct(id);
   }
 
   @Get('cam/:cid/members')
+  @ApiOperation({
+    summary: 'member 검색',
+    description: 'cam id(pk)로 member 정보 조회',
+  })
+  @ApiCreatedResponse({
+    description: 'cam id(pk)로 member 정보 조회',
+    type: Member,
+  })
   async findByCam(@Param('cid') cid: number): Promise<Member[]> {
     return await this.memberService.findAllByCamByAcct(cid);
   }
 
   @Get(':id/member')
+  @ApiOperation({
+    summary: 'member 검색',
+    description: 'member id(pk)로 member 정보 조회',
+  })
+  @ApiCreatedResponse({
+    description: 'member id(pk)로 member 정보 조회',
+    type: Member,
+  })
   async findOne(
     @Param('id') id: number,
     @Body() member: Member,
@@ -165,12 +193,26 @@ export class MemberController {
   }
 
   @Delete('member/:mid')
+  @ApiOperation({
+    summary: 'member 삭제',
+    description: 'member id(pk)로 member 삭제',
+  })
   remove(@Param('mid') mid: number) {
     this.memberService.remove(mid);
     return `member #${mid} deleted!`;
   }
 
   @Put('member/:mid')
+  @ApiOperation({
+    summary: 'member 검색',
+    description:
+      'member id(pk)로 member 검색해서 member name과 phone 입력해서 정보 수정',
+  })
+  @ApiCreatedResponse({
+    description:
+      'member id(pk)로 member 검색해서 member name과 phone 입력해서 정보 수정',
+    type: Member,
+  })
   update(@Param('mid') mid: number, @Body() member: Member) {
     this.memberService.update(mid, member);
     return `member #${mid} updated!`;

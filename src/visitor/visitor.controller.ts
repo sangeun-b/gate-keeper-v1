@@ -21,8 +21,10 @@ import { MemberService } from 'src/member/member.service';
 import { Visitor } from './entity/visitor.entity';
 import { VisitorService } from './visitor.service';
 import { v4 as uuid } from 'uuid';
+import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('cam')
+@ApiTags('Visitor API')
 export class VisitorController {
   constructor(
     private visitorService: VisitorService,
@@ -51,6 +53,14 @@ export class VisitorController {
   // }
 
   @Post(':id/visitor')
+  @ApiOperation({
+    summary: 'Visitor 등록 ',
+    description: 'Cam id(pk)에 감지된 vistior 자동 등록',
+  })
+  @ApiCreatedResponse({
+    description: 'Cam id(pk)에 감지된 vistior 자동 등록',
+    type: Visitor,
+  })
   @UseInterceptors(
     MyNewFileInterceptor('file', (ctx) => {
       // const req = ctx.switchToHttp().getRequest() as Request;
@@ -116,6 +126,14 @@ export class VisitorController {
   }
 
   @Get(':id/visitor')
+  @ApiOperation({
+    summary: 'Visitor 날짜로 조회',
+    description: 'Cam id(pk)에 등록된 vistior의 저장날짜로 조회',
+  })
+  @ApiCreatedResponse({
+    description: 'Cam id(pk)에 등록된 vistior의 저장날짜로 조회',
+    type: Visitor,
+  })
   async findByDate(
     @Param('id') id: number,
     @Body() visitor: Visitor,
@@ -123,11 +141,27 @@ export class VisitorController {
     return await this.visitorService.findByDate(visitor, id);
   }
   @Get(':id/visitors')
+  @ApiOperation({
+    summary: 'Visitor 날짜로 조회',
+    description: 'Cam id(pk)에 등록된 모든 vistior 조회',
+  })
+  @ApiCreatedResponse({
+    description: 'Cam id(pk)에 등록된 모든 vistior 조회',
+    type: Visitor,
+  })
   async findAll(@Param('id') id: number): Promise<Visitor[] | undefined> {
     return await this.visitorService.findAllVisitor(id);
   }
 
   @Get(':id/visitor/:name')
+  @ApiOperation({
+    summary: 'Visitor 저장된 img 이름으로 조회',
+    description: 'Cam id(pk)에 등록된 vistior의 img이름으로 img불러오기',
+  })
+  @ApiCreatedResponse({
+    description: 'Cam id(pk)에 등록된 vistior의 img이름으로 img불러오기',
+    type: StreamableFile,
+  })
   async getFile(
     @Param('name') name: string,
     @Param('id') id: number,

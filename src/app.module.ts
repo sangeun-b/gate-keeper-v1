@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { Acct } from './acct/entity/acct.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { ApplModule } from './appl/appl.module';
 import { VisitorModule } from './visitor/visitor.module';
 import { Visitor } from './visitor/entity/visitor.entity';
 import { MemberModule } from './member/member.module';
@@ -39,7 +38,6 @@ import { FirebaseModule } from 'nestjs-firebase';
       timezone: 'Z',
     }),
     AuthModule,
-    ApplModule,
     VisitorModule,
     MemberModule,
     CamModule,

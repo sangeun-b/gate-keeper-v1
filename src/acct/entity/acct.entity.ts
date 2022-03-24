@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Cam } from 'src/cam/entity/cam.entity';
 import { Member } from 'src/member/entity/member.entity';
 import {
@@ -15,15 +16,21 @@ export class Acct {
   id: number;
 
   @Column()
+  @ApiProperty({ description: 'acct id' })
   acct_id: string;
 
   @Column()
+  @ApiProperty({ description: 'acct password' })
   pwd: string;
 
   @Column()
+  @ApiProperty({ description: '전화번호' })
   phone: string;
 
   @Column()
+  @ApiProperty({
+    description: '주소',
+  })
   addr: string;
 
   @Column({ nullable: true })

@@ -1,12 +1,21 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-// import { firebase } from 'src/firebase/initFirebase';
-// import firebase from 'src/firebase2/initFirebase2';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
-  console.log('connect');
   const app = await NestFactory.create(AppModule);
+
+  const config = new DocumentBuilder()
+    .setTitle('Gate-Keeper')
+    .setDescription('Gate-Keeper API description')
+    .setVersion('1.0')
+    .addTag('Gate-keeper')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
   await app.listen(process.env.PORT || 3000);
 }
-// getFirebaseAdmin();
+
 bootstrap();

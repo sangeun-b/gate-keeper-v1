@@ -14,8 +14,10 @@ import { AuthGuard } from './security/auth.guard';
 import { Acct } from 'src/acct/entity/acct.entity';
 import { CamService } from 'src/cam/cam.service';
 import { Cam } from 'src/cam/entity/cam.entity';
+import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('Acct register&login API')
 export class AuthController {
   constructor(
     private authService: AuthService,
@@ -23,6 +25,11 @@ export class AuthController {
   ) {}
 
   @Post('/register')
+  @ApiOperation({
+    summary: 'Acct 생성',
+    description: 'Acct 생성',
+  })
+  @ApiCreatedResponse({ description: 'Acct 생성', type: Acct })
   async registerAccount(@Req() req: Request, @Body() acct: Acct): Promise<any> {
     const cam = new Cam();
     const addr2 = acct.addr.split('동');
@@ -39,6 +46,11 @@ export class AuthController {
   }
 
   @Post('/login')
+  @ApiOperation({
+    summary: '로그인',
+    description: '로그인',
+  })
+  @ApiCreatedResponse({ description: '로그인', type: Acct })
   async login(@Body() acct: Acct, @Res() res: Response): Promise<any> {
     const jwt = await this.authService.validateAcct(acct);
     res.setHeader('Authorization', 'Bearer ' + jwt.accessToken);
@@ -46,7 +58,15 @@ export class AuthController {
   }
 
   @Get('/authenticate')
-  @UseGuards(AuthGuard) //사용자 정보 가지고옴
+  @ApiOperation({
+    summary: 'Acct 조회(Token)',
+    description: 'token이용하여 Acct 정보 조회',
+  })
+  @ApiCreatedResponse({
+    description: 'token이용하여 Acct 정보 조회',
+    type: Acct,
+  })
+  @UseGuards(AuthGuard) //token을 이용해 사용자 정보 가지고 옴, api 추가 어떻게?
   isAuthenticated(@Req() req: Request): any {
     const acct: any = req.user;
     return acct;

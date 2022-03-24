@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Cam } from 'src/cam/entity/cam.entity';
 import {
   Column,
