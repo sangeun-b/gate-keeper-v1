@@ -152,7 +152,7 @@ export class MemberController {
 
   @Get(':aid/members')
   @ApiOperation({
-    summary: 'member 검색',
+    summary: 'acct의 모든 member 검색',
     description: 'acct id(pk)로 member 정보 조회',
   })
   @ApiCreatedResponse({
@@ -165,7 +165,7 @@ export class MemberController {
 
   @Get('cam/:cid/members')
   @ApiOperation({
-    summary: 'member 검색',
+    summary: 'cam의 모든 member 검색',
     description: 'cam id(pk)로 member 정보 조회',
   })
   @ApiCreatedResponse({
@@ -204,7 +204,7 @@ export class MemberController {
 
   @Put('member/:mid')
   @ApiOperation({
-    summary: 'member 검색',
+    summary: 'member 수정',
     description:
       'member id(pk)로 member 검색해서 member name과 phone 입력해서 정보 수정',
   })
