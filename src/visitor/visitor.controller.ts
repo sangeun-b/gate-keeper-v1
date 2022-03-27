@@ -142,7 +142,7 @@ export class VisitorController {
   }
   @Get(':id/visitors')
   @ApiOperation({
-    summary: 'Visitor 날짜로 조회',
+    summary: '모든 Visitor 조회',
     description: 'Cam id(pk)에 등록된 모든 vistior 조회',
   })
   @ApiCreatedResponse({
