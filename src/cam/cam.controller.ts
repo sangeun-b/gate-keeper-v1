@@ -30,6 +30,8 @@ export class CamController {
   @ApiOperation({ summary: '모든 Cam 조회', description: '모든 Cam 조회' })
   @ApiCreatedResponse({ description: '모든 Cam 조회', type: Cam })
   findAll() {
+    const curr = new Date();
+    console.log(curr);
     return this.camService.findAll();
   }
 

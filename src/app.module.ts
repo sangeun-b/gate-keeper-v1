@@ -35,7 +35,7 @@ import { FirebaseModule } from 'nestjs-firebase';
       database: process.env.DB_NAME,
       entities: [Acct, Visitor, Member, Cam, Imgs2],
       // synchronize: true, //entity만들고 자동 save. 개발모드에서만 사용
-      timezone: 'Z',
+      timezone: process.env.TZ,
     }),
     AuthModule,
     VisitorModule,

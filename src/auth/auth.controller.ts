@@ -66,7 +66,7 @@ export class AuthController {
     description: 'token이용하여 Acct 정보 조회',
     type: Acct,
   })
-  @UseGuards(AuthGuard) //token을 이용해 사용자 정보 가지고 옴, api 추가 어떻게?
+  @UseGuards(AuthGuard) //응답할때 pwd 삭제?
   isAuthenticated(@Req() req: Request): any {
     const acct: any = req.user;
     return acct;

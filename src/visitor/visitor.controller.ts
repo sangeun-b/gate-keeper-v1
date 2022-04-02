@@ -118,8 +118,6 @@ export class VisitorController {
       const findImg = await this.imgService.findByPath(visitor.img);
       const findMem = await this.memService.findOne(findImg.memberId);
       visitor.name = findMem.name;
-      console.log(`====${findMem.name}`);
-      console.log(`==${visitor.name}`);
       visitor.img = file.filename;
     }
     return await this.visitorService.save(visitor);
@@ -150,7 +148,14 @@ export class VisitorController {
     type: Visitor,
   })
   async findAll(@Param('id') id: number): Promise<Visitor[] | undefined> {
-    return await this.visitorService.findAllVisitor(id);
+    const vlist = await this.visitorService.findAllVisitor(id);
+    for (let i = 0; i < vlist.length; i++) {
+      vlist[
+        i
+      ].img = `https://gate-keeper-v1.herokuapp.com/cam/${id}/visitor/${vlist[i].img}`;
+      console.log(vlist[i]);
+    }
+    return vlist;
   }
 
   @Get(':id/visitor/:name')
