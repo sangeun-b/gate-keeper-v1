@@ -72,17 +72,17 @@ export class GuestController {
       },
     });
     guest.img = file.filename;
-    // const guestFind = await this.guestService.save(guest);
-    // if (guestFind == undefined) {
-    //   try {
-    //     unlinkSync(`./guests/${id}/${file.filename}`);
-    //   } catch (err) {
-    //     console.log(err);
-    //   } finally {
-    //     return;
-    //   }
-    // }
-    return await this.guestService.save(guest);
+    const guestFind = await this.guestService.save(guest);
+    if (guestFind == undefined) {
+      try {
+        unlinkSync(`./guests/${id}/${file.filename}`);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        return;
+      }
+    }
+    return guestFind;
   }
   @Get(':aid/guests')
   async findAll(@Param('aid') id: number): Promise<Guest[] | undefined> {
@@ -116,16 +116,16 @@ export class GuestController {
   }
   @Delete(':aid/guest/:id')
   async remove(@Param('id') id: number, @Param('aid') aid: number) {
-    // const guestFind = await this.guestService.findOne(id);
-    // if (guestFind) {
-    //   try {
-    //     unlinkSync(`./guests/${aid}/${guestFind.img}`);
-    //     this.guestService.remove(id);
-    //     return `guest #${id} Deleted!`;
-    //   } catch (err) {
-    //     return 'Delete failed';
-    //   }
-    // }
+    const guestFind = await this.guestService.findOne(id);
+    if (guestFind) {
+      try {
+        unlinkSync(`./guests/${aid}/${guestFind.img}`);
+        this.guestService.remove(id);
+        return `guest #${id} Deleted!`;
+      } catch (err) {
+        return 'Delete failed';
+      }
+    }
     return this.guestService.remove(id);
   }
 }
