@@ -202,9 +202,15 @@ export class MemberController {
     summary: 'member 삭제',
     description: 'member id(pk)로 member 삭제',
   })
-  remove(@Param('mid') mid: number) {
-    this.memberService.remove(mid);
-    return `member #${mid} deleted!`;
+  async remove(@Param('mid') mid: number) {
+    const memFind = await this.memberService.findOne(mid);
+    console.log(`===${memFind}`);
+    if (memFind) {
+      this.memberService.remove(mid);
+      return `member #${mid} Deleted!`;
+    } else {
+      return 'Delete failed';
+    }
   }
 
   @Put('member/:mid')
