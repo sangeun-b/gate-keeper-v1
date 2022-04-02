@@ -29,24 +29,18 @@ export class GuestController {
   @Post(':id/guest')
   @UseInterceptors(
     MyNewFileInterceptor('file', (ctx) => {
-      // const req = ctx.switchToHttp().getRequest() as Request;
-      // console.log(`.upload/${req.params.id}`);
       return {
         storage: diskStorage({
           destination: (req, file, cb) => {
-            // const { id } = req.body;
             const path = `./guests/${req.params.id}`;
             mkdirSync(path, { recursive: true });
             return cb(null, path);
           },
-          //destination: `.upload/${req.params.id}`,
-          // tslint:disable-next-line: variable-name
           filename: (_req, file, cb) => {
             const randomName = Array(32)
               .fill(null)
               .map(() => Math.round(Math.random() * 16).toString(16))
               .join('');
-            // console.log(req);
             const ext = file.originalname.split('.').pop();
             return cb(null, `${randomName}-${_req.params.id}.${ext}`);
           },
@@ -116,16 +110,16 @@ export class GuestController {
   }
   @Delete(':aid/guest/:id')
   async remove(@Param('id') id: number, @Param('aid') aid: number) {
-    // const guestFind = await this.guestService.findOne(id);
-    // if (guestFind) {
-    //   try {
-    //     unlinkSync(`./guests/${aid}/${guestFind.img}`);
-    //     this.guestService.remove(id);
-    //     return `guest #${id} Deleted!`;
-    //   } catch (err) {
-    //     return 'Delete failed';
-    //   }
-    // }
-    return this.guestService.remove(id);
+    const guestFind = await this.guestService.findOne(id);
+    if (guestFind) {
+      try {
+        unlinkSync(`./guests/${aid}/${guestFind.img}`);
+        this.guestService.remove(id);
+        return `guest #${id} Deleted!`;
+      } catch (err) {
+        return 'Delete failed';
+      }
+    }
+    return '??';
   }
 }
