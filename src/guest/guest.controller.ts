@@ -110,15 +110,15 @@ export class GuestController {
   }
   @Delete(':aid/guest/:id')
   async remove(@Param('id') id: number, @Param('aid') aid: number) {
-    const guestFind = await this.guestService.findOne(id);
-    if (guestFind) {
-      try {
-        unlinkSync(`./guests/${aid}/${guestFind.img}`);
-      } catch (err) {
-        console.log(err);
-        return 'Delete failed';
-      }
-    }
+    // const guestFind = await this.guestService.findOne(id);
+    // if (guestFind) {
+    //   try {
+    //     unlinkSync(`./guests/${aid}/${guestFind.img}`);
+    //   } catch (err) {
+    //     console.log(err);
+    //     return 'Delete failed';
+    //   }
+    // }
     this.guestService.remove(id);
     return `guest #${id} Deleted!`;
   }
