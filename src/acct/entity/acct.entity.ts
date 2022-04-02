@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Cam } from 'src/cam/entity/cam.entity';
+import { Guest } from 'src/guest/entity/guest.entity';
 import { Member } from 'src/member/entity/member.entity';
 import {
   Column,
@@ -43,4 +44,8 @@ export class Acct {
   @OneToMany(() => Member, (member) => member.acct)
   @JoinColumn()
   members: Member[];
+
+  @OneToMany(() => Guest, (guest) => guest.acct)
+  @JoinColumn()
+  guests: Guest[];
 }

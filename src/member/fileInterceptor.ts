@@ -10,7 +10,6 @@ import {
 import { FileInterceptor, MulterModuleOptions } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { MULTER_MODULE_OPTIONS } from '@nestjs/platform-express/multer/files.constants';
-import { Observable } from 'rxjs';
 import * as multer from 'multer';
 
 export const MyNewFileInterceptor = (
@@ -21,6 +20,7 @@ export const MyNewFileInterceptor = (
 
   class MixinInterceptor extends FileInterceptorInstance {
     protected multer: any;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     protected moduleOptions: {};
 
     constructor(

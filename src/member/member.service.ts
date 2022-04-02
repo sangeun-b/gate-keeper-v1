@@ -95,7 +95,6 @@ export class MemberService {
         .update(Member)
         .set({
           name: member.name,
-          phone: member.phone,
         })
         .where('id = :id', { id })
         .execute();

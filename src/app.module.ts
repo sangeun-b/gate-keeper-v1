@@ -13,6 +13,8 @@ import { Cam } from './cam/entity/cam.entity';
 import { Imgs2 } from './Imgs2/entity/imgs2.entity';
 import { ConfigModule } from '@nestjs/config';
 import { FirebaseModule } from 'nestjs-firebase';
+import { GuestModule } from './guest/guest.module';
+import { Guest } from './guest/entity/guest.entity';
 
 @Module({
   imports: [
@@ -33,14 +35,14 @@ import { FirebaseModule } from 'nestjs-firebase';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Acct, Visitor, Member, Cam, Imgs2],
-      // synchronize: true, //entity만들고 자동 save. 개발모드에서만 사용
-      timezone: process.env.TZ,
+      entities: [Acct, Visitor, Member, Cam, Imgs2, Guest],
+      synchronize: true, //entity만들고 자동 save. 개발모드에서만 사용
     }),
     AuthModule,
     VisitorModule,
     MemberModule,
     CamModule,
+    GuestModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -19,9 +19,9 @@ export class Member {
   @ApiProperty({ description: 'member 이름' })
   name: string;
 
-  @Column()
-  @ApiProperty({ description: 'member 전화번호' })
-  phone: string;
+  // @Column()
+  // @ApiProperty({ description: 'member 전화번호' })
+  // phone: string;
 
   // @Column()
   // addr: string;

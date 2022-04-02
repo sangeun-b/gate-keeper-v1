@@ -141,7 +141,7 @@ export class MemberController {
 
     const mem = await this.memberService.findByName(member, id);
     console.log(`===${mem}===`);
-    await this.imgsService.save(mimg, mem);
+    // await this.imgsService.save(mimg, mem);
     return await this.imgsService.save(mimg, mem);
 
     //return await this.memberService.save(member);
@@ -179,17 +179,22 @@ export class MemberController {
   @Get(':id/member')
   @ApiOperation({
     summary: 'member 검색',
-    description: 'member id(pk)로 member 정보 조회',
+    description: 'member 이름으로 member 정보 조회',
   })
   @ApiCreatedResponse({
-    description: 'member id(pk)로 member 정보 조회',
+    description: 'member 이름으로 member 정보 조회',
     type: Member,
   })
-  async findOne(
+  async findOneByName(
     @Param('id') id: number,
     @Body() member: Member,
   ): Promise<Member> {
     return await this.memberService.findByName(member, id);
+  }
+
+  @Get('member/:id')
+  findOne(@Param('id') id: number): Promise<Member> {
+    return this.memberService.findOne(id);
   }
 
   @Delete('member/:mid')

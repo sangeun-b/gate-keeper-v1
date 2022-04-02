@@ -163,7 +163,8 @@ export class ImgsController {
     if (imgFind) {
       try {
         unlinkSync(`./uploads/${aid}/${imgFind.url}`);
-        return this.imgsService.remove(id);
+        this.imgsService.remove(id);
+        return `img #${id} Deleted!`;
       } catch (err) {
         console.error(err);
         return 'Delete fail';
