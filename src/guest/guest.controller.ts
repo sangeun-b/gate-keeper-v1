@@ -114,12 +114,12 @@ export class GuestController {
     if (guestFind) {
       try {
         unlinkSync(`./guests/${aid}/${guestFind.img}`);
-        this.guestService.remove(id);
-        return `guest #${id} Deleted!`;
       } catch (err) {
+        console.log(err);
         return 'Delete failed';
       }
     }
-    return '??';
+    this.guestService.remove(id);
+    return `guest #${id} Deleted!`;
   }
 }
