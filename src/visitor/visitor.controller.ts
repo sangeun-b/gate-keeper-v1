@@ -138,6 +138,7 @@ export class VisitorController {
   ): Promise<Visitor[] | undefined> {
     return await this.visitorService.findByDate(visitor, id);
   }
+
   @Get(':id/visitors')
   @ApiOperation({
     summary: '모든 Visitor 조회',

@@ -73,7 +73,7 @@ export class GuestController {
       } catch (err) {
         console.log(err);
       } finally {
-        return;
+        return 'register failed!';
       }
     }
     return guestFind;
