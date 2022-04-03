@@ -123,7 +123,22 @@ export class VisitorController {
     return await this.visitorService.save(visitor);
   }
 
-  @Get(':id/visitor')
+  // @Get(':id/visitor')
+  // @ApiOperation({
+  //   summary: 'Visitor 날짜로 조회',
+  //   description: 'Cam id(pk)에 등록된 vistior의 저장날짜로 조회',
+  // })
+  // @ApiCreatedResponse({
+  //   description: 'Cam id(pk)에 등록된 vistior의 저장날짜로 조회',
+  //   type: Visitor,
+  // })
+  // async findByDate(
+  //   @Param('id') id: number,
+  //   @Body() visitor: Visitor,
+  // ): Promise<Visitor[] | undefined> {
+  //   return await this.visitorService.findByDate(visitor, id);
+  // }
+  @Get(':id/visitor/:date')
   @ApiOperation({
     summary: 'Visitor 날짜로 조회',
     description: 'Cam id(pk)에 등록된 vistior의 저장날짜로 조회',
@@ -134,9 +149,9 @@ export class VisitorController {
   })
   async findByDate(
     @Param('id') id: number,
-    @Body() visitor: Visitor,
+    @Param('date') date: string,
   ): Promise<Visitor[] | undefined> {
-    return await this.visitorService.findByDate(visitor, id);
+    return await this.visitorService.findByDate(date, id);
   }
 
   @Get(':id/visitors')

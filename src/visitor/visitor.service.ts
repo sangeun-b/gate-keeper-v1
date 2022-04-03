@@ -18,10 +18,7 @@ export class VisitorService {
     return await this.visitorRepo.save(visitor);
   }
 
-  async findByDate(
-    visitor: Visitor,
-    id: number,
-  ): Promise<Visitor[] | undefined> {
+  async findByDate(date: string, id: number): Promise<Visitor[] | undefined> {
     // const findVisitor = await getRepository(Visitor)
     //   .createQueryBuilder('visitor')
     //   .where('visitor.visitDate like :visitDate and visitor.cam = :id', {
@@ -35,10 +32,11 @@ export class VisitorService {
     // });
     // console.log(findVisitor);
     // console.log(findVisitor2);
+    console.log(date);
     return await getRepository(Visitor)
       .createQueryBuilder('visitor')
       .where('visitor.visitDate like :visitDate and visitor.cam = :id', {
-        visitDate: visitor.visitDate + '%',
+        visitDate: date + '%',
         id: id,
       })
       .getMany();
