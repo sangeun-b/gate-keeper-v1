@@ -142,7 +142,13 @@ export class MemberController {
     const mem = await this.memberService.findByName(member, id);
     console.log(`===${mem}===`);
     // await this.imgsService.save(mimg, mem);
-    return await this.imgsService.save(mimg, mem);
+    const saveImg = await this.imgsService.save(mimg, mem);
+    // const saveImg = await this.imgsService.findOne(mimg.id);
+    // console.log(saveImg);
+    // console.log(`===${saveImg.url}`);
+    saveImg.url = `https://gate-keeper-v1.herokuapp.com/member/img/${id}/${saveImg.url}`;
+
+    return saveImg;
 
     //return await this.memberService.save(member);
     //await this.memberService.save(member);

@@ -149,7 +149,9 @@ export class ImgsController {
     // mimg.url = uploadedLink[0].metadata.mediaLink;
     mimg.url = file.filename;
     console.log(uploadedLink);
-    return await this.imgsService.save(mimg, mem);
+    const saveImg = await this.imgsService.save(mimg, mem);
+    saveImg.url = `https://gate-keeper-v1.herokuapp.com/member/img/${aid}/${saveImg.url}`;
+    return saveImg;
   }
 
   @Delete(':aid/img/:id')
