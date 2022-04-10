@@ -161,18 +161,38 @@ export class ImgsController {
   })
   async remove(@Param('id') id: number, @Param('aid') aid: number) {
     const imgFind = await this.imgsService.findOne(id);
-    console.log(imgFind);
-    if (imgFind) {
-      try {
-        unlinkSync(`./uploads/${aid}/${imgFind.url}`);
-        this.imgsService.remove(id);
-        return `img #${id} Deleted!`;
-      } catch (err) {
-        console.error(err);
-        return 'Delete fail';
-      }
-    }
-    return 'Delete failed!';
+    // const bucket = this.firebase.storage.bucket(
+    //   process.env.NEXT_PUBLIC_FIRBASE_STORAGE_BUCKET,
+    // );
+    //firebase 삭제 확인 필요!
+    // console.log(imgFind);
+    // if (imgFind) {
+    //   try {
+    //     await bucket.file(`uploads/${aid}/${imgFind.url}`).delete();
+    //     this.imgsService.remove(id);
+    //     return `img #${id} Deleted!`;
+    //   } catch (err) {
+    //     console.error(err);
+    //     return 'Delete fail';
+    //   }
+    // }
+    // return 'Delete failed!';
+
+    // 로컬에서 삭제
+    // console.log(imgFind);
+    // if (imgFind) {
+    //   try {
+    //     unlinkSync(`./uploads/${aid}/${imgFind.url}`);
+    //     this.imgsService.remove(id);
+    //     return `img #${id} Deleted!`;
+    //   } catch (err) {
+    //     console.error(err);
+    //     return 'Delete fail';
+    //   }
+    // }
+    // return 'Delete failed!';
+    this.imgsService.remove(id);
+    return `img #${id} Deleted!`;
   }
 
   // @Put(':aid/:id')
