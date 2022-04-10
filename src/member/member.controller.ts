@@ -113,42 +113,47 @@ export class MemberController {
     console.log(acct);
     member.acct = acct;
     // member.img = file.filename;
-    const mimg = new Imgs2();
-    const bucket = this.firebase.storage.bucket(
-      process.env.NEXT_PUBLIC_FIRBASE_STORAGE_BUCKET,
-    );
-    console.log(file.path);
-    const uploadedLink = await bucket.upload(file.path, {
-      public: true,
-      destination: `uploads/${id}/${file.filename}`,
-      metadata: {
-        firebaseStorageDownloadTokens: uuid(),
-      },
-    });
-    mimg.url = file.filename;
-    console.log(member);
-    const memberFind = await this.memberService.save(member);
-    console.log(memberFind);
-    if (memberFind == undefined) {
-      try {
-        unlinkSync(`./uploads/${id}/${file.filename}`);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        return;
-      }
+    if (!file) {
+      return await this.memberService.save(member);
+    } else {
+      const mimg = new Imgs2();
+      const bucket = this.firebase.storage.bucket(
+        process.env.NEXT_PUBLIC_FIRBASE_STORAGE_BUCKET,
+      );
+      console.log(file.path);
+      const uploadedLink = await bucket.upload(file.path, {
+        public: true,
+        destination: `uploads/${id}/${file.filename}`,
+        metadata: {
+          firebaseStorageDownloadTokens: uuid(),
+        },
+      });
+
+      mimg.url = file.filename;
+      console.log(member);
+      const memberFind = await this.memberService.save(member);
+      console.log(memberFind);
+      // if (memberFind == undefined) {
+      //   try {
+      //     unlinkSync(`./uploads/${id}/${file.filename}`);
+      //   } catch (err) {
+      //     console.error(err);
+      //   } finally {
+      //     return;
+      //   }
+      // }
+
+      const mem = await this.memberService.findByName(member, id);
+      console.log(`===${mem}===`);
+      // await this.imgsService.save(mimg, mem);
+      const saveImg = await this.imgsService.save(mimg, mem);
+      // const saveImg = await this.imgsService.findOne(mimg.id);
+      // console.log(saveImg);
+      // console.log(`===${saveImg.url}`);
+      saveImg.url = `https://gate-keeper-v1.herokuapp.com/member/img/${id}/${saveImg.url}`;
+      return saveImg;
     }
-
-    const mem = await this.memberService.findByName(member, id);
-    console.log(`===${mem}===`);
-    // await this.imgsService.save(mimg, mem);
-    const saveImg = await this.imgsService.save(mimg, mem);
-    // const saveImg = await this.imgsService.findOne(mimg.id);
-    // console.log(saveImg);
-    // console.log(`===${saveImg.url}`);
-    saveImg.url = `https://gate-keeper-v1.herokuapp.com/member/img/${id}/${saveImg.url}`;
-
-    return saveImg;
+    return 'add member failed!';
 
     //return await this.memberService.save(member);
     //await this.memberService.save(member);
