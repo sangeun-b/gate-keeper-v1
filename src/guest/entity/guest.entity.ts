@@ -1,10 +1,11 @@
 import { Acct } from 'src/acct/entity/acct.entity';
-import { Imgs2 } from 'src/Imgs2/entity/imgs2.entity';
+import { GImgs } from 'src/g-imgs/entity/g-imgs.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -15,8 +16,6 @@ export class Guest {
 
   @Column()
   name: string;
-  @Column()
-  img: string;
 
   @Column({ nullable: true })
   acctId: number;
@@ -24,4 +23,8 @@ export class Guest {
   @ManyToOne(() => Acct, (acct) => acct.guests, { onDelete: 'CASCADE' })
   @JoinColumn()
   acct: Acct;
+
+  @OneToMany(() => GImgs, (gimgs) => gimgs.guest)
+  @JoinColumn()
+  gImgs: GImgs[];
 }

@@ -120,7 +120,7 @@ export class MemberController {
       const bucket = this.firebase.storage.bucket(
         process.env.NEXT_PUBLIC_FIRBASE_STORAGE_BUCKET,
       );
-      console.log(file.path);
+      console.log(`1. ${file.path}`);
       const uploadedLink = await bucket.upload(file.path, {
         public: true,
         destination: `uploads/${id}/${file.filename}`,
@@ -130,9 +130,9 @@ export class MemberController {
       });
 
       mimg.url = file.filename;
-      console.log(member);
+      // console.log(`2. ${member}`);
       const memberFind = await this.memberService.save(member);
-      console.log(memberFind);
+      console.log('3. ', memberFind);
       // if (memberFind == undefined) {
       //   try {
       //     unlinkSync(`./uploads/${id}/${file.filename}`);
@@ -153,8 +153,6 @@ export class MemberController {
       saveImg.url = `https://gate-keeper-v1.herokuapp.com/member/img/${id}/${saveImg.url}`;
       return saveImg;
     }
-    return 'add member failed!';
-
     //return await this.memberService.save(member);
     //await this.memberService.save(member);
     // const mem = await this.memberService.findByName(member.name);

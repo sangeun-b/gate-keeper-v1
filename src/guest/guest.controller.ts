@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Response,
   StreamableFile,
   UploadedFile,
@@ -18,12 +19,15 @@ import { MyNewFileInterceptor } from 'src/member/fileInterceptor';
 import { Guest } from './entity/guest.entity';
 import { GuestService } from './guest.service';
 import { v4 as uuid } from 'uuid';
+import { GImgs } from 'src/g-imgs/entity/g-imgs.entity';
+import { GImgsService } from 'src/g-imgs/g-imgs.service';
 
 @Controller('acct')
 export class GuestController {
   constructor(
     private guestService: GuestService,
     private acctService: AcctService,
+    private gImgsService: GImgsService,
     @InjectFirebaseAdmin() private readonly firebase: FirebaseAdmin,
   ) {}
   @Post(':id/guest')
@@ -55,69 +59,63 @@ export class GuestController {
   ) {
     const acct = await this.acctService.findOne(id);
     guest.acct = acct;
-    const bucket = this.firebase.storage.bucket(
-      process.env.NEXT_PUBLIC_FIRBASE_STORAGE_BUCKET,
-    );
-    const uploadedLink = await bucket.upload(file.path, {
-      public: true,
-      destination: `guests/${id}/${file.filename}`,
-      metadata: {
-        firebaseStorageDownloadTokens: uuid(),
-      },
-    });
-    guest.img = file.filename;
-    const guestFind = await this.guestService.save(guest);
-    if (guestFind == undefined) {
-      try {
-        unlinkSync(`./guests/${id}/${file.filename}`);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        return 'register failed!';
-      }
+    if (!file) {
+      return await this.guestService.save(guest);
+    } else {
+      const gimg = new GImgs();
+      const bucket = this.firebase.storage.bucket(
+        process.env.NEXT_PUBLIC_FIRBASE_STORAGE_BUCKET,
+      );
+      const uploadedLink = await bucket.upload(file.path, {
+        public: true,
+        destination: `guests/${id}/${file.filename}`,
+        metadata: {
+          firebaseStorageDownloadTokens: uuid(),
+        },
+      });
+      gimg.url = file.filename;
+      const guestFind = await this.guestService.save(guest);
+      // if (guestFind == undefined) {
+      //   try {
+      //     unlinkSync(`./guests/${id}/${file.filename}`);
+      //   } catch (err) {
+      //     console.log(err);
+      //   } finally {
+      //     return 'register failed!';
+      //   }
+      // }
+      const guest2 = await this.guestService.findOne(guestFind.id);
+      console.log(`saved guest: ${guest2}`);
+      const saveImg = await this.gImgsService.save(gimg, guest2);
+      saveImg.url = `https://gate-keeper-v1.herokuapp.com/guest/img/${id}/${saveImg.url}`;
+      return guestFind;
     }
-    return guestFind;
   }
+
   @Get(':aid/guests')
-  async findAll(@Param('aid') id: number): Promise<Guest[] | undefined> {
-    const glist = await this.guestService.findAllByAcct(id);
-    for (let i = 0; i < glist.length; i++) {
-      glist[
-        i
-      ].img = `https://gate-keeper-v1.herokuapp.com/acct/${id}/guest/${glist[i].img};`;
-    }
-    return glist;
+  findAll(@Param('aid') id: number): Promise<Guest[]> {
+    return this.guestService.findAllByAcct(id);
   }
-  @Get(':aid/guest/:img')
-  async getFile(
-    @Param('img') img: string,
-    @Param('aid') id: number,
-    @Response({ passthrough: true }) res,
-  ): Promise<StreamableFile> {
-    const bucket = this.firebase.storage.bucket(
-      process.env.NEXT_PUBLIC_FIRBASE_STORAGE_BUCKET,
-    );
-    const file = bucket.file(`guests/${id}/${img}`).createReadStream();
-    res.set({
-      'Content-Type': 'image/jpeg',
-      'Content-Disposition': 'filename=' + img,
-    });
-    return new StreamableFile(file);
-  }
-  @Get(':id/guest')
-  findOne(@Param('id') id: number): Promise<Guest> {
+
+  @Get('guest/:gid')
+  findOne(@Param('gid') id: number): Promise<Guest> {
     return this.guestService.findOne(id);
   }
-  @Delete(':aid/guest/:id')
-  async remove(@Param('id') id: number, @Param('aid') aid: number) {
-    const guestFind = await this.guestService.findOne(id);
-    console.log(`!!!${guestFind}`);
-    // const guestFind = await this.guestService.findOne(id);
+
+  @Delete('guest/:gid')
+  async remove(@Param('gid') gid: number) {
+    const guestFind = await this.guestService.findOne(gid);
     if (guestFind) {
-      this.guestService.remove(id);
-      return `guest #${id} Deleted!`;
+      this.guestService.remove(gid);
+      return `guest #${gid} Deleted!`;
     } else {
       return 'Delete failed';
     }
+  }
+
+  @Put('guest/:gid')
+  update(@Param('gid') gid: number, @Body() guest: Guest) {
+    this.guestService.update(gid, guest);
+    return `guest #${gid} updated!`;
   }
 }

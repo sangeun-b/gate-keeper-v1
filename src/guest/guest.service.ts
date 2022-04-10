@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AcctService } from 'src/acct/acct.service';
+import { getConnection } from 'typeorm';
 import { Guest } from './entity/guest.entity';
 import { GuestRepository } from './guest.repository';
 
@@ -30,5 +31,18 @@ export class GuestService {
 
   findOne(id: number): Promise<Guest> {
     return this.guestRepository.findOne(id);
+  }
+  async update(id: number, guest: Guest): Promise<void> {
+    const existedGuest = await this.findOne(id);
+    if (existedGuest) {
+      await getConnection()
+        .createQueryBuilder()
+        .update(Guest)
+        .set({
+          name: guest.name,
+        })
+        .where('id = :id', { id })
+        .execute();
+    }
   }
 }
