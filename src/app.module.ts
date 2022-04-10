@@ -37,7 +37,7 @@ import { GImgs } from './g-imgs/entity/g-imgs.entity';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [Acct, Visitor, Member, Cam, Imgs2, Guest, GImgs],
-      synchronize: true, //entity만들고 자동 save. 개발모드에서만 사용
+      // synchronize: true, //entity만들고 자동 save. 개발모드에서만 사용
     }),
     AuthModule,
     VisitorModule,
