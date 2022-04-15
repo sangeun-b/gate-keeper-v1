@@ -44,13 +44,13 @@ export class MemberService {
     return await this.memberRepository.save(newMember);
   }
 
-  async findByName(mem: Member, id: number): Promise<Member | undefined> {
+  async findByName(id: number, name: string): Promise<Member | undefined> {
     // const findAcct = this.acctService.findOne(id);
     // if (!findAcct) {
     //   throw new HttpException('로그인 먼저 해주세요', HttpStatus.BAD_REQUEST);
     // }
     return await this.memberRepository.findOne({
-      where: { name: mem.name, acctId: id },
+      where: { name: name, acctId: id },
     });
   }
   findAllByAcct(id: number): Promise<Member[]> {

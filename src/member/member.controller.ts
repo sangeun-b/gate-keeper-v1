@@ -143,7 +143,7 @@ export class MemberController {
       //   }
       // }
 
-      const mem = await this.memberService.findByName(member, id);
+      const mem = await this.memberService.findByName(id, member.name);
       console.log(`===${mem}===`);
       // await this.imgsService.save(mimg, mem);
       const saveImg = await this.imgsService.save(mimg, mem);
@@ -185,7 +185,7 @@ export class MemberController {
     return await this.memberService.findAllByCamByAcct(cid);
   }
 
-  @Get(':id/member')
+  @Get(':id/member/:name')
   @ApiOperation({
     summary: 'member 검색',
     description: 'member 이름으로 member 정보 조회',
@@ -196,9 +196,9 @@ export class MemberController {
   })
   async findOneByName(
     @Param('id') id: number,
-    @Body() member: Member,
+    @Param('name') name: string,
   ): Promise<Member> {
-    return await this.memberService.findByName(member, id);
+    return await this.memberService.findByName(id, name);
   }
 
   @Get('member/:id')
