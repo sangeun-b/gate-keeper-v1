@@ -17,7 +17,6 @@ export class CamController {
   save(@Body() cam: Cam) {
     return this.camService.create(cam);
   }
-  // mac address로 검색가능하게 만들기
 
   @Get('macAddr')
   @ApiOperation({ summary: 'Cam 조회', description: 'macAddr로 Cam 조회' })
@@ -41,9 +40,4 @@ export class CamController {
     this.camService.remove(id);
     return `cam #${id} deleted!`;
   }
-
-  // @Get('addr')
-  // findByAddr(@Body() addr: Cam) {
-  //   return this.camService.findByAddr(addr);
-  // }
 }

@@ -117,7 +117,6 @@ export class GImgsController {
         firebaseStorageDownloadTokens: uuid(),
       },
     });
-    // mimg.url = uploadedLink[0].metadata.mediaLink;
     gimg.url = file.filename;
     console.log(uploadedLink);
     const saveImg = await this.gImgsService.save(gimg, guest2);

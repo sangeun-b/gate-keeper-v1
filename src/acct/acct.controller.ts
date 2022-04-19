@@ -35,10 +35,6 @@ export class AcctController {
   findOne(@Param('id') id: number): Promise<Acct> {
     return this.acctsService.findOne(id);
   }
-  //   @Post()
-  //   create(@Body() acct: Acct) {
-  //     return this.acctsService.create(acct);
-  //   }
 
   @Delete(':id')
   @ApiOperation({
