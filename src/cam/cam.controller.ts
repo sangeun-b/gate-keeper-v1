@@ -18,10 +18,10 @@ export class CamController {
     return this.camService.create(cam);
   }
 
-  @Get('macAddr')
+  @Get('macAddr/:macAddr')
   @ApiOperation({ summary: 'Cam 조회', description: 'macAddr로 Cam 조회' })
   @ApiCreatedResponse({ description: 'macAddr로 Cam 조회', type: Cam })
-  findByMacAddr(@Body() macAddr: Cam) {
+  findByMacAddr(@Param('macAddr') macAddr: string) {
     return this.camService.findByMacAddr(macAddr);
   }
 
@@ -32,6 +32,13 @@ export class CamController {
     const curr = new Date();
     console.log(curr);
     return this.camService.findAll();
+  }
+
+  @Get('addr/:addr')
+  findByAddr(@Param('addr') addr: string) {
+    const cam = new Cam();
+    cam.addr = addr;
+    return this.camService.findByAddr(cam);
   }
 
   @Delete(':id')

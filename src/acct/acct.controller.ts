@@ -41,14 +41,14 @@ export class AcctController {
     return this.acctsService.findOneById(aid);
   }
 
-  @Delete(':id')
+  @Delete(':email')
   @ApiOperation({
     summary: 'Acct 삭제',
-    description: 'id(pk)로 Acct 삭제',
+    description: 'email 로 Acct 삭제',
   })
-  remove(@Param('id') id: number) {
-    this.acctsService.remove(id);
-    return `Deleted a #${id} acct`;
+  remove(@Param('email') email: string) {
+    this.acctsService.remove(email);
+    return `Deleted a #${email} acct`;
   }
 
   @Put(':id')

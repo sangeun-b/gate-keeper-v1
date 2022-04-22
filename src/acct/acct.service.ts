@@ -49,7 +49,9 @@ export class AcctService {
   //   await this.acctRepository.save(acct); //async: 처리가 완료된 다음에 return
   // }
 
-  async remove(id: number): Promise<void> {
+  async remove(email: string): Promise<void> {
+    const acct = await this.findOneById(email);
+    const id = acct.id;
     await this.acctRepository.delete(id);
   }
 

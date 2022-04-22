@@ -21,12 +21,12 @@ export class CamService {
     return this.camRepository.findOne(id);
   }
 
-  async findByMacAddr(cam: Cam): Promise<Cam | undefined> {
+  async findByMacAddr(macAddr: string): Promise<Cam | undefined> {
     // const findCam = await this.camRepository.findOne({
     //   where: { macAddr: cam.macAddr },
     // });
     // console.log(findCam);
-    return this.camRepository.findOne({ where: { macAddr: cam.macAddr } });
+    return this.camRepository.findOne({ where: { macAddr: macAddr } });
   }
 
   async findByAddr(cam: Cam): Promise<Cam | undefined> {
