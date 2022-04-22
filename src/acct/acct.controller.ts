@@ -36,6 +36,11 @@ export class AcctController {
     return this.acctsService.findOne(id);
   }
 
+  @Get('/acctId/:aid')
+  findOneById(@Param('aid') aid: string): Promise<Acct> {
+    return this.acctsService.findOneById(aid);
+  }
+
   @Delete(':id')
   @ApiOperation({
     summary: 'Acct 삭제',

@@ -23,6 +23,10 @@ export class AcctService {
     return await this.acctRepository.find(options);
   }
 
+  findOneById(id: string): Promise<Acct> {
+    return this.acctRepository.findOne({ where: { acct_id: id } });
+  }
+
   async save(acct: Acct): Promise<Acct | undefined> {
     await this.transformPassword(acct);
     console.log(acct);
